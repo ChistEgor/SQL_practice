@@ -18,3 +18,13 @@ VALUES
 (1, 'Boat', 1, '2020-11-08'),
 (2, 'Auto', 0, '2020-11-09'),
 (3, 'Plane', NULL, '2020-12-09')
+GO
+CREATE USER TestUser WITH PASSWORD = 'pass!4Word'
+GO
+GRANT CONNECT ON DATABASE::TestDb TO TestUser
+GO
+REVERT
+GO
+GRANT SELECT ON OBJECT::TestSchema.TestTable TO TestUser
+GO
+DROP USER TestUser
