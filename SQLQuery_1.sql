@@ -4,7 +4,6 @@ USE TestDb
 GO
 CREATE SCHEMA TestSchema
 GO
---SELECT * FROM sys.schemas
 CREATE TABLE TestSchema.TestTable
 (
     ID INT NOT NULL, --ID in upper case because is the abbreviation
