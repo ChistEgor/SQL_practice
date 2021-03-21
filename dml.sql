@@ -41,6 +41,4 @@ WHEN MATCHED AND t.Name != s.Name THEN
 WHEN NOT MATCHED THEN 
     INSERT (ID, Name, IsSold, InvoiceDate) 
     VALUES (s.ID, s.Name, s.IsSold, s.InvoiceDate)
-OUTPUT $action AS Operation, Inserted.ID, Inserted.Name NameNew,
-Inserted.IsSold IsSoldNew, Inserted.InvoiceDate InvoiceDateNew,
-Deleted.Name NameOld, Deleted.IsSold IsSoldOld, Deleted.InvoiceDate InvoiceDateOld;
+OUTPUT $action AS Operation, Inserted.*, Deleted.*;
