@@ -44,8 +44,3 @@ WHEN NOT MATCHED THEN
 OUTPUT $action AS Operation, Inserted.ID, Inserted.Name NameNew,
 Inserted.IsSold IsSoldNew, Inserted.InvoiceDate InvoiceDateNew,
 Deleted.Name NameOld, Deleted.IsSold IsSoldOld, Deleted.InvoiceDate InvoiceDateOld;
-GO
-SELECT *
-FROM TestSchema.TestTable2
-SELECT *
-FROM TestSchema.TestTable
