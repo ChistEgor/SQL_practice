@@ -34,7 +34,7 @@ FROM (
             ) AS JobTitle
     FROM Person.Person AS pp
     ) AS Temp
-WHERE JobTitle IS NOT NULL
+WHERE Temp.JobTitle IS NOT NULL
 GO
 
 --Task 1.4
