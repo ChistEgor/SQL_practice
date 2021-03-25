@@ -1,8 +1,6 @@
 USE AdventureWorks2019
 GO
 
---EXEC sp_help 'Person.Person'
---EXEC sp_columns Employee
 -- Task 1.1
 SELECT pp.FirstName
     , pp.LastName
