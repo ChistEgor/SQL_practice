@@ -23,7 +23,7 @@ FROM Person.Person AS pp
 GO
 
 -- Task 1.3
-SELECT TEMPORARY.*
+SELECT Temp.*
 FROM (
     SELECT pp.FirstName
         , pp.LastName
@@ -33,7 +33,7 @@ FROM (
             WHERE pp.BusinessEntityID = he.BusinessEntityID
             ) AS JobTitle
     FROM Person.Person AS pp
-    ) AS TEMPORARY
+    ) AS Temp
 WHERE JobTitle IS NOT NULL
 GO
 
