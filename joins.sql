@@ -10,7 +10,7 @@ SELECT pp.FirstName
     , he.BirthDate
 FROM Person.Person AS pp
 INNER JOIN HumanResources.Employee AS he
-    ON (pp.BusinessEntityID = he.BusinessEntityID)
+    ON (pp.BusinessEntityID = he.BusinessEntityID);
 GO
 
 -- Task 1.2
@@ -21,7 +21,8 @@ SELECT pp.FirstName
         FROM HumanResources.Employee AS he
         WHERE pp.BusinessEntityID = he.BusinessEntityID
         ) AS JobTitle
-FROM Person.Person AS pp
+FROM Person.Person AS pp;
+GO
 
 -- the same action but through a join. better
 SELECT pp.FirstName
@@ -29,7 +30,7 @@ SELECT pp.FirstName
     , he.JobTitle
 FROM Person.Person AS pp
 FULL OUTER JOIN HumanResources.Employee AS he
-    ON (pp.BusinessEntityID = he.BusinessEntityID)
+    ON (pp.BusinessEntityID = he.BusinessEntityID);
 GO
 
 -- Task 1.3 *don't sure
@@ -45,7 +46,7 @@ WHERE (
         SELECT he.JobTitle
         FROM HumanResources.Employee AS he
         WHERE pp.BusinessEntityID = he.BusinessEntityID
-        ) IS NOT NULL
+        ) IS NOT NULL;
 GO
 
 --Task 1.4
@@ -53,7 +54,7 @@ SELECT pp.FirstName
     , pp.LastName
     , he.JobTitle
 FROM Person.Person AS pp
-CROSS JOIN HumanResources.Employee AS he
+CROSS JOIN HumanResources.Employee AS he;
 GO
 
 --Task 1.5
@@ -64,7 +65,8 @@ FROM (
         , he.JobTitle
     FROM Person.Person AS pp
     CROSS JOIN HumanResources.Employee AS he
-    ) AS TemporaryTable
+    ) AS TemporaryTable;
+GO
 
 --check
 SELECT (
@@ -73,4 +75,4 @@ SELECT (
         ) * (
         SELECT COUNT(JobTitle)
         FROM HumanResources.Employee
-        ) AS Amount
+        ) AS Amount;
