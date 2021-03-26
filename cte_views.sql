@@ -14,18 +14,7 @@ JOIN Person.EmailAddress AS pea
 GO
 
 -- Task 3.2
-WITH Human_CTE (
-    BusinessEntityId
-    , NationalIdNumber
-    , JobTitle
-    )
-AS (
-    SELECT BusinessEntityId
-        , NationalIdNumber
-        , JobTitle
-    FROM HumanResources.Employee
-    )
-    , Person_CTE (
+WITH Person_CTE (
     BusinessEntityId
     , FirstName
     , LastName
@@ -36,15 +25,24 @@ AS (
         , LastName
     FROM Person.Person
     )
-SELECT Human_CTE.BusinessEntityId
-    , Human_CTE.NationalIdNumber
+    , Phone_CTE (
+    BusinessEntityID
+    , PhoneNumber
+    )
+AS (
+    SELECT BusinessEntityID
+        , PhoneNumber
+    FROM Person.PersonPhone
+    )
+SELECT hre.BusinessEntityID
+    , hre.NationalIdNumber
     , Person_CTE.FirstName
     , Person_CTE.LastName
-    , Human_CTE.JobTitle
-    , ppp.PhoneNumber
-FROM Person.PersonPhone AS ppp
+    , hre.JobTitle
+    , Phone_CTE.PhoneNumber
+FROM HumanResources.Employee AS hre
 JOIN Person_CTE
-    ON ppp.BusinessEntityID = Person_CTE.BusinessEntityId
-JOIN Human_CTE
-    ON ppp.BusinessEntityID = Human_CTE.BusinessEntityId
+    ON hre.BusinessEntityID = Person_CTE.BusinessEntityID
+JOIN Phone_CTE
+    ON hre.BusinessEntityID = Phone_CTE.BusinessEntityID;
 GO
