@@ -30,10 +30,8 @@ CREATE FUNCTION dbo.ufnConcatStrings (
 RETURNS varchar(255)
 AS
 BEGIN
-    DECLARE @concat_string varchar(255)
-
+    DECLARE @concat_string varchar(255);
     SET @concat_string = CONCAT_WS(' - ', @column1, @column2);
-
     RETURN @concat_string;
 END;
 GO
