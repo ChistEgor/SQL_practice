@@ -21,12 +21,6 @@ AS
     ROLLBACK;
 GO
 
--- Test
-ALTER TABLE HumanResources.Department DROP COLUMN Address;
-GO
-SELECT * FROM HumanResources.Department
-GO
-
 
 -- Task 4.3
 CREATE FUNCTION dbo.ufnConcatStrings (
@@ -44,13 +38,6 @@ BEGIN
 END;
 GO
 
--- Test
-SELECT dbo.ufnConcatStrings('settle', 'down') AS ConcatString
-GO
-SELECT dbo.ufnConcatStrings(Name, GroupName) 
-FROM HumanResources.Department
-GO
-
 
 -- Task 4.4
 CREATE FUNCTION HumanResources.ufnEmployeeByDepartment (@departmentID INT)
@@ -66,10 +53,6 @@ RETURN
 );
 GO
 
--- Test
-SELECT * FROM HumanResources.ufnEmployeeByDepartment(16)
-GO
-
 
 -- Task 4.5
 CREATE PROC Person.uspSearchByName 
@@ -83,6 +66,3 @@ BEGIN
     WHERE FirstName LIKE @Name OR LastName LIKE @Name;
 END 
 GO
-
--- Test
-EXEC Person.uspSearchByName N'Ada%';
