@@ -62,11 +62,11 @@ CREATE PROC Person.uspSearchByName
 AS
 BEGIN
     DECLARE @ReturnName NVARCHAR(25)
-	SET @ReturnName = '%' + @Name + '%'
-	SELECT BusinessEntityId
-		,FirstName
-		,LastName
-	FROM Person.Person
+    SET @ReturnName = '%' + @Name + '%'
+    SELECT BusinessEntityId
+	,FirstName
+	,LastName
+    FROM Person.Person
 	WHERE FirstName LIKE @ReturnName
 		OR LastName LIKE @ReturnName;
 END 
