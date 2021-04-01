@@ -58,7 +58,7 @@ GO
 
 -- Task 4.5
 CREATE PROC Person.uspSearchByName 
-    @Name nvarchar(50) = '%'
+    @Name nvarchar(50)
 AS
 BEGIN
     DECLARE @ReturnName NVARCHAR(25)
