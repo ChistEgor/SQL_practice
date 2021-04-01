@@ -61,7 +61,7 @@ CREATE PROC Person.uspSearchByName
     @Name nvarchar(50)
 AS
 BEGIN
-    DECLARE @ReturnName NVARCHAR(25)
+    DECLARE @ReturnName nvarchar(52)
     SET @ReturnName = '%' + @Name + '%'
     SELECT BusinessEntityId
 	,FirstName
