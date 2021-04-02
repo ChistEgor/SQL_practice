@@ -17,8 +17,7 @@ GROUP BY he.BusinessEntityID
 GO
 
 -- Task 1.3 
-SELECT sh.ModifiedDate AS LastDateModified
-    , MIN(sd.UnitPrice) AS MinUnitPrice
+SELECT MIN(sd.UnitPrice) AS MinUnitPrice
     , ps.Name AS NameSubCategory
 FROM Sales.SalesOrderHeader AS sh
 JOIN Sales.SalesOrderDetail AS sd
@@ -27,7 +26,8 @@ JOIN Production.Product AS pp
     ON sd.ProductID = pp.ProductID
 JOIN Production.ProductSubcategory AS ps
     ON pp.ProductSubcategoryID = ps.ProductSubcategoryID
-GROUP BY ps.Name, sh.ModifiedDate
+GROUP BY ps.Name
+GO
 
 -- Task 1.4
 SELECT pc.Name AS NameCategory
@@ -49,6 +49,7 @@ JOIN Production.Product AS pp
 JOIN Production.ProductSubcategory AS ps
     ON pp.ProductSubcategoryID = ps.ProductSubcategoryID
 GROUP BY ps.Name
+GO
 
 -- Task 1.6
 SELECT BusinessEntityID
