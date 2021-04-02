@@ -6,14 +6,9 @@ SELECT COUNT(DISTINCT GroupName) AS AmountOfGroup
 FROM HumanResources.Department
 
 -- Task 1.2
-SELECT he.BusinessEntityID
-    , he.JobTitle
-    , MAX(hp.Rate) AS MaxRate
-FROM HumanResources.EmployeePayHistory AS hp
-JOIN HumanResources.Employee AS he
-    ON hp.BusinessEntityID = he.BusinessEntityID
-GROUP BY he.BusinessEntityID
-    , he.JobTitle
+SELECT MAX(Rate) AS MaxRate
+FROM HumanResources.EmployeePayHistory
+GROUP BY BusinessEntityID
 GO
 
 -- Task 1.3 
