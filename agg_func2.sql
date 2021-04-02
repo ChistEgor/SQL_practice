@@ -2,13 +2,19 @@ USE AdventureWorks2019
 GO
 
 -- Task 1.1
-SELECT COUNT(DISTINCT GroupName) AS AmountOfGroup
+SELECT GroupName, COUNT(*) AS AmountDeps
 FROM HumanResources.Department
+GROUP BY GroupName
 
 -- Task 1.2
-SELECT MAX(Rate) AS MaxRate
-FROM HumanResources.EmployeePayHistory
-GROUP BY BusinessEntityID
+SELECT eh.BusinessEntityID
+    , he.JobTitle
+    , MAX(eh.Rate) AS MaxRate
+FROM HumanResources.EmployeePayHistory AS eh
+JOIN HumanResources.Employee AS he
+    ON eh.BusinessEntityID = he.BusinessEntityID
+GROUP BY eh.BusinessEntityID
+    , he.JobTitle
 GO
 
 -- Task 1.3 
@@ -28,7 +34,7 @@ GO
 SELECT pc.Name AS NameCategory
     , COUNT(ps.ProductSubcategoryID) AS AmountSubCategory
 FROM Production.ProductCategory AS pc
-LEFT JOIN Production.ProductSubcategory AS ps
+JOIN Production.ProductSubcategory AS ps
     ON pc.ProductCategoryID = ps.ProductCategoryID
 GROUP BY pc.Name
 GO
@@ -48,8 +54,8 @@ GO
 
 -- Task 1.6
 SELECT BusinessEntityID
-    , RateChangeDate
     , Rate
+    , RateChangeDate
 FROM HumanResources.EmployeePayHistory
 WHERE Rate = (
         SELECT MAX(Rate)
