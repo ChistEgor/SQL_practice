@@ -53,11 +53,14 @@ GROUP BY ps.Name
 GO
 
 -- Task 1.6
-SELECT BusinessEntityID
-    , Rate
-    , RateChangeDate
-FROM HumanResources.EmployeePayHistory
-WHERE Rate = (
+SELECT eh.BusinessEntityID
+    , eh.Rate
+    , MAX(RateChangeDate) AS SetDay
+FROM HumanResources.EmployeePayHistory AS eh
+GROUP BY eh.BusinessEntityID
+    , eh.Rate
+HAVING eh.Rate = (
         SELECT MAX(Rate)
         FROM HumanResources.EmployeePayHistory
         )
+GO
