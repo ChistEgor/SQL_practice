@@ -53,6 +53,7 @@ GROUP BY ps.Name
 -- Task 1.6
 SELECT BusinessEntityID
     , RateChangeDate
+    , Rate
 FROM HumanResources.EmployeePayHistory
 WHERE Rate = (
         SELECT MAX(Rate)
