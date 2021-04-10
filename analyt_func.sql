@@ -2,12 +2,12 @@ USE AdventureWorks2019
 GO
 
 --Task 1.1
-SELECT t1.Name
-    , t1.ProductTotalSumSale
+SELECT Product
+    ,ProductTotalSum
 FROM (
-    SELECT pp.Name
-        , SUM(LineTotal) AS ProductTotalSumSale
-        , NTILE(10) OVER (ORDER BY SUM(LineTotal)) AS NtRange
+    SELECT pp.Name AS Product
+        , SUM(sod.LineTotal) AS ProductTotalSum
+        , NTILE(10) OVER (ORDER BY SUM(sod.LineTotal)) AS Tile
     FROM Production.Product AS pp
     JOIN Sales.SalesOrderDetail AS sod
         ON pp.ProductID = sod.ProductID
@@ -16,38 +16,42 @@ FROM (
     WHERE soh.OrderDate BETWEEN '2013-01-01' AND '2013-01-31'
     GROUP BY pp.Name
     ) AS t1
-WHERE NtRange BETWEEN 2 AND 9
+WHERE Tile BETWEEN 2 AND 9;
 GO
 
 --Task 1.2
-SELECT t2.*
+SELECT Name
+    ,ListPrice
 FROM (
     SELECT Name
-        , ListPrice
-        , MIN(ListPrice) OVER (PARTITION BY ProductSubcategoryID ORDER BY ListPrice) AS MinPriceProductSub
+        ,ListPrice
+        ,RANK() OVER (PARTITION BY ProductSubcategoryID ORDER BY ListPrice) AS RankPrice
     FROM Production.Product
     WHERE ProductSubcategoryID IS NOT NULL
     ) AS t2
-WHERE t2.ListPrice = t2.MinPriceProductSub
+WHERE RankPrice = 1;
 GO
 
 --Task 1.3
-SELECT TOP 1 t3.*
+SELECT DISTINCT ListPrice
 FROM (
-    SELECT Name
-        , ListPrice
-        , DENSE_RANK() OVER (ORDER BY ListPrice DESC) AS PriceRank
+    SELECT ListPrice
+        ,DENSE_RANK() OVER (PARTITION BY ProductSubcategoryID ORDER BY ListPrice DESC) AS RankPrice
     FROM Production.Product
-    WHERE Name LIKE '%Mountain Frame%'
+    WHERE ProductSubcategoryID = 1
     ) AS t3
-WHERE t3.PriceRank = 2
+WHERE RankPrice = 2;
 GO
 
---Task 1.4 not end.
-SELECT t4.*
+--Task 1.4
+SELECT Category
+    ,Sales
+    ,((Sales - PreviousSales) / Sales) * 100 AS YoY
 FROM (
-    SELECT LineTotal
-        , OrderDate
+    SELECT pc.Name AS Category
+        ,YEAR(soh.OrderDate) AS OrderYear
+        ,SUM(sod.LineTotal) AS Sales
+        ,LAG(SUM(sod.LineTotal)) OVER (ORDER BY pc.Name, YEAR(soh.OrderDate)) AS PreviousSales
     FROM Sales.SalesOrderHeader AS soh
     JOIN Sales.SalesOrderDetail AS sod
         ON soh.SalesOrderID = sod.SalesOrderID
@@ -57,48 +61,35 @@ FROM (
         ON pp.ProductSubcategoryID = ps.ProductSubcategoryID
     JOIN Production.ProductCategory AS pc
         ON ps.ProductCategoryID = pc.ProductCategoryID
+    WHERE soh.OrderDate BETWEEN '2012-01-01' AND '2013-12-31'
+    GROUP BY YEAR(soh.OrderDate)
+        ,pc.Name
     ) AS t4
-
---
-SELECT * FROM Sales.SalesOrderHeader
-
-SELECT * FROM Sales.SalesOrderDetail
-
-SELECT * FROM Production.Product
-
-SELECT * FROM Production.ProductSubcategory
-
-SELECT * FROM Production.ProductCategory
+WHERE OrderYear = 2013;
+GO
 
 --Task 1.5
-SELECT DISTINCT CONVERT(nvarchar(10), OrderDate, 104) AS OrderDate
-    , MAX(SumDay) OVER (PARTITION BY OrderDate) AS MaxSumDay
-FROM (
-    SELECT OrderDate
-        , SUM(UnitPrice) OVER (PARTITION BY OrderDate) AS SumDay
-    FROM Sales.SalesOrderDetail AS sod
-    JOIN Sales.SalesOrderHeader AS soh
-        ON sod.SalesOrderID = soh.SalesOrderID
-    WHERE OrderDate BETWEEN '2013-01-01' AND '2013-01-31'
-    ) AS t5
+SELECT DISTINCT soh.OrderDate
+    ,MAX(SUM(sod.LineTotal)) OVER (PARTITION BY soh.OrderDate) AS OrderMax
+FROM Sales.SalesOrderDetail AS sod
+JOIN Sales.SalesOrderHeader AS soh
+    ON sod.SalesOrderID = soh.SalesOrderID
+WHERE soh.OrderDate BETWEEN '2013-01-01' AND '2013-01-31'
+GROUP BY soh.OrderDate
+    ,soh.SalesOrderID;
 GO
 
 --Task 1.6
-SELECT DISTINCT t6.NameSubcategory
-    , t6.ProductName
-FROM (
-    SELECT ps.Name AS NameSubcategory
-        , pp.Name AS ProductName
-        , sod.OrderQty
-        , MAX(OrderQty) OVER (PARTITION BY ps.Name) AS MaxAmountProductInSubcategory
-    FROM Sales.SalesOrderHeader AS sh
-    JOIN Sales.SalesOrderDetail AS sod
-        ON sh.SalesOrderID = sod.SalesOrderID
-    JOIN Production.Product AS pp
-        ON sod.ProductID = pp.ProductID
-    JOIN Production.ProductSubcategory AS ps
-        ON pp.ProductSubcategoryID = ps.ProductSubcategoryID
-    WHERE OrderDate BETWEEN '2013-01-01' AND '2013-01-31'
-    ) AS t6
-WHERE t6.MaxAmountProductInSubcategory = t6.OrderQty
+SELECT DISTINCT ps.Name AS NameSubcategory
+    ,FIRST_VALUE(pp.Name) OVER(PARTITION BY ps.Name ORDER BY count(*) DESC) MostAmount
+FROM Sales.SalesOrderHeader AS sh
+JOIN Sales.SalesOrderDetail AS sod
+    ON sh.SalesOrderID = sod.SalesOrderID
+JOIN Production.Product AS pp
+    ON sod.ProductID = pp.ProductID
+JOIN Production.ProductSubcategory AS ps
+    ON pp.ProductSubcategoryID = ps.ProductSubcategoryID
+WHERE OrderDate BETWEEN '2013-01-01' AND '2013-01-31'
+GROUP BY ps.Name
+    ,pp.Name;
 GO
