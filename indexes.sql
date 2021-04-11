@@ -35,12 +35,6 @@ CREATE INDEX IX_Customer_ModifiedDate ON dbo.Customer (ModifiedDate) INCLUDE
 (FirstName, LastName);
 GO
 
-SELECT FirstName
-	,LastName
-FROM Customer
-WHERE ModifiedDate = '2020-10-20';
-GO
-
 --Task 1.4
 DROP TABLE IF EXISTS dbo.Customer2;
 GO
