@@ -48,15 +48,8 @@ CREATE TABLE dbo.Customer2
 	,Email VARCHAR(100)
 	,ModifiedDate DATE
 	,CONSTRAINT PK_Customer2_CustomerID PRIMARY KEY NONCLUSTERED (CustomerID)
+	,INDEX CI_Customer2_AccountNumber CLUSTERED (AccountNumber)
 );
-GO
-
-IF EXISTS (SELECT name FROM sys.indexes  
-            WHERE name = N'CI_Customer2_CustomerID') -- 
-    DROP INDEX CI_Customer2_CustomerID ON dbo.Customer2;
-GO
-
-CREATE CLUSTERED INDEX CI_Customer2_CustomerID ON dbo.Customer2(CustomerID);
 GO
 
 --Task 1.5
